@@ -60,7 +60,7 @@ import React from 'react';
 const Card = ({ card, onClick, disabled }) => {
   return (
     <button
-      className={`w-20 h-20 bg-blue-600 rounded-xl focus:outline-none ${disabled ? 'opacity-50 cursor-not-allowed' : 'opacity-100 hover:bg-blue-600'}`}
+      className={`w-20 h-20 bg-blue-600 focus:outline-none ${disabled ? 'opacity-50 cursor-not-allowed' : 'opacity-100 hover:bg-blue-600'}`}
       onClick={() => onClick(card)}
       disabled={disabled}
     >
