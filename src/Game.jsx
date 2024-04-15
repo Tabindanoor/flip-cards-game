@@ -1,54 +1,21 @@
-// // src/components/Game.js
-// import React, { useState, useEffect } from 'react';
-// import Board from './Board';
-
-// const Game = () => {
-//   const [cards, setCards] = useState([]);
-
-//   useEffect(() => {
-//     const newCards = [];
-//     const values = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-//     for (let i = 0; i < 8; i++) {
-//       newCards.push({ value: values[i], flipped: false, matched: false });
-//       newCards.push({ value: values[i], flipped: false, matched: false });
-//     }
-//     newCards.sort(() => Math.random() - 0.5);
-//     setCards(newCards);
-//   }, []);
-
-//   const handleClick = (selectedCard) => {
-//     setCards((prevCards) =>
-//       prevCards.map((card) =>
-//         card === selectedCard ? { ...card, flipped: !card.flipped } : card
-//       )
-//     );
-//   };
-
-//   return (
-//     <div className="flex justify-center items-center h-screen bg-gray-200">
-//       <Board cards={cards} onClick={handleClick} />
-//     </div>
-//   );
-// };
-
-// export default Game;
-
-
-// Game.js
 import { useState, useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Card from "./Card";
 
 const icons = [
   "🍎", "🍉", "🍋", "🍌",
   "🍓", "🍒", "🍍", "🍑",
   "🍇", "🍊", "🥭", "🥝",
-  "🍏", "🥥", "🍅", "🥑"
+  "🍏", "🥥", "🍅", "🥑",
+  "🍈","🧀"
 ];
 
 const Game = () => {
   const [cards, setCards] = useState([]);
   const [selectedCards, setSelectedCards] = useState([]);
   const [matchedPairs, setMatchedPairs] = useState([]);
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     const shuffledIcons = icons.concat(icons).sort(() => Math.random() - 0.5);
@@ -65,6 +32,24 @@ const Game = () => {
     if (selectedCards.length === 1) {
       if (selectedCards[0].icon === selectedCard.icon) {
         setMatchedPairs([...matchedPairs, selectedCards[0].id, selectedCard.id]);
+        setScore(score + 1);
+        toast.success('Congratulations! You found a match.', {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      } else {
+        toast.error('Not matched! Try again.', {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
       setTimeout(() => {
         setSelectedCards([]);
@@ -73,7 +58,14 @@ const Game = () => {
   };
 
   return (
-    <div className="flex flex-wrap w-72">
+
+    <div>
+
+    <ToastContainer />
+    <div className="w-full text-center m-4 ">Score: {score}</div>
+
+    <div className="grid grid-cols-9 flex-wrap  gap-9 mx-auto justify-center text-center">
+      
       {cards.map((card) => (
         <Card
           key={card.id}
@@ -83,6 +75,8 @@ const Game = () => {
           matched={matchedPairs.includes(card.id)}
         />
       ))}
+    </div>
+    
     </div>
   );
 };
