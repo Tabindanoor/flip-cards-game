@@ -53,15 +53,17 @@ const Game = () => {
       }
       setTimeout(() => {
         setSelectedCards([]);
-      }, 1000);
+      }, 2000);
     }
   };
 
   return (
 
     <div>
+<div className="flex float-end">
+      <ToastContainer />
 
-    <ToastContainer />
+</div>
     <div className="w-full text-center m-4 ">Score: {score}</div>
 
     <div className="grid grid-cols-9 flex-wrap  gap-9 mx-auto justify-center text-center">
