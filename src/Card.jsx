@@ -20,6 +20,8 @@ const Card = ({ card, onClick, disabled, matched }) => {
     }
   };
 
+
+  
   return (
     <div
       className={`card ${flipped || matched ? "flipped" : ""}`}

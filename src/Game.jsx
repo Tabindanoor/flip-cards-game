@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Card from "./Card";
+import VantaComponent from "./VantaComponent";
 
 const icons = [
   "🍎", "🍉", "🍋", "🍌",
@@ -18,67 +19,109 @@ const Game = () => {
   const [score, setScore] = useState(0);
 
   useEffect(() => {
+    resetGame();
+  }, []);
+
+  const resetGame = () => {
     const shuffledIcons = icons.concat(icons).sort(() => Math.random() - 0.5);
     const initialCards = shuffledIcons.map((icon, index) => ({
       id: index,
       icon
     }));
     setCards(initialCards);
-  }, []);
+    setSelectedCards([]);
+    setMatchedPairs([]);
+    setScore(0);
+  };
+
 
   const handleCardClick = (selectedCard) => {
+    if (selectedCard.matched || selectedCards.includes(selectedCard)) {
+        return; // Ignore if the card is already matched or is already selected
+    }
+
     setSelectedCards([...selectedCards, selectedCard]);
 
     if (selectedCards.length === 1) {
-      if (selectedCards[0].icon === selectedCard.icon) {
-        setMatchedPairs([...matchedPairs, selectedCards[0].id, selectedCard.id]);
-        setScore(score + 1);
-        toast.success('Congratulations! You found a match.', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      } else {
-        toast.error('Not matched! Try again.', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      }
-      setTimeout(() => {
-        setSelectedCards([]);
-      }, 2000);
+        if (selectedCards[0].icon === selectedCard.icon) {
+            setMatchedPairs([...matchedPairs, selectedCards[0].id, selectedCard.id]);
+            setScore(score + 1);
+            toast.success('Congratulations! You found a match.', {
+                position: "top-center",
+                autoClose: 1000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } else {
+            toast.error('Not matched! Try again.', {
+                position: "top-center",
+                autoClose: 1000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        }
+        setTimeout(() => {
+            setSelectedCards([]);
+        }, 2000);
     }
-  };
+};
+
+
+
+  // const handleCardClick = (selectedCard) => {
+  //   setSelectedCards([...selectedCards, selectedCard]);
+
+  //   if (selectedCards.length === 1) {
+  //     if (selectedCards[0].icon === selectedCard.icon) {
+  //       setMatchedPairs([...matchedPairs, selectedCards[0].id, selectedCard.id]);
+  //       setScore(score + 1);
+  //       toast.success('Congratulations! You found a match.', {
+  //         position: "top-center",
+  //         autoClose: 2000,
+  //         hideProgressBar: true,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //       });
+  //     } else {
+  //       toast.error('Not matched! Try again.', {
+  //         position: "top-center",
+  //         autoClose: 2000,
+  //         hideProgressBar: true,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //       });
+  //     }
+  //     setTimeout(() => {
+  //       setSelectedCards([]);
+  //     }, 2000);
+  //   }
+  // };
 
   return (
-
     <div>
-<div className="flex float-end">
-      <ToastContainer />
-
-</div>
-    <div className="w-full text-center m-4 ">Score: {score}</div>
-
-    <div className="grid grid-cols-9 flex-wrap  gap-9 mx-auto justify-center text-center">
-      
-      {cards.map((card) => (
-        <Card
-          key={card.id}
-          card={card}
-          onClick={handleCardClick}
-          disabled={selectedCards.length === 2}
-          matched={matchedPairs.includes(card.id)}
-        />
-      ))}
-    </div>
-    
+      <div className="flex float-end">
+        {/* <VantaComponent/> */}
+        <button onClick={resetGame} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mr-4">Reset</button>
+        <ToastContainer />
+      </div>
+      <div className="w-full text-center m-4">Score: {score}</div>
+      <div className="grid grid-cols-9 flex-wrap gap-9 mx-auto justify-center text-center">
+        {cards.map((card) => (
+          <Card
+            key={card.id}
+            card={card}
+            onClick={handleCardClick}
+            disabled={selectedCards.length === 2}
+            matched={matchedPairs.includes(card.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
