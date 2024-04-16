@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import VANTA from "vanta/dist/vanta.birds.min";
 
 const VantaComponent = () => {
